@@ -133,9 +133,6 @@ class StudentServicedbTest {
 		studentServicedb.getStudent(student);
 	}
 
-	@Test
-	void getStudentIndexInListTest() {
-
-	}
+	
 
 }
