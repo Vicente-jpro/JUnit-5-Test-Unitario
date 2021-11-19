@@ -30,7 +30,7 @@ class StudentServicedbTest {
 	private StudentServicedb studentServicedb;
 	private static int ID_ZERO = 0;
 	private static String NULL_NAME = null;
-
+	private Student student = null;
 	@Test
 	@DisplayName("Save person ")
 	void save() {
@@ -55,9 +55,10 @@ class StudentServicedbTest {
 	void deleteTest() throws StudentNotFoundException, StudentDeleteException {
 
 		this.studentServicedb = new StudentServicedb();
-
-		studentServicedb.save(new Student(4, "Angolano"));
-		studentServicedb.delete(new Student(4, "Angolano"));
+		this.student = new Student(4, "Angolano"); 
+		
+		studentServicedb.save(student);
+		studentServicedb.delete(student);
 
 	}
 
@@ -66,12 +67,12 @@ class StudentServicedbTest {
 	void deleteStudentNotFoundExceptionTest() {
 
 		this.studentServicedb = new StudentServicedb();
-
+		this.student = new Student(4, "Angolano");
 		// Exception when list is empty
 		StudentNotFoundException studentNotFoundException = assertThrows(StudentNotFoundException.class,
-				() -> studentServicedb.delete(new Student(4, "Angolano")));
+				() -> studentServicedb.delete( student ));
 
-		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + new Student(4, "Angolano"),
+		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + student,
 				studentNotFoundException.getMessage());
 
 	}
@@ -99,6 +100,7 @@ class StudentServicedbTest {
 	void updateTest() throws StudentNotFoundException{
 		
 		this.studentServicedb = new StudentServicedb();
+		studentServicedb.save(new Student(4, "Basileiro"));
 		studentServicedb.update(new Student(4, "Angolano"));
 
 	}
@@ -108,18 +110,27 @@ class StudentServicedbTest {
 	void updateStudentNotFoundExceptionTest() throws StudentNotFoundException{
 		
 		this.studentServicedb = new StudentServicedb();
-		studentServicedb.update(new Student(4, "Angolano"));
+		this.student = new Student(4, "Angolano");
+		studentServicedb.save(student);
+		
+		StudentNotFoundException studentNotFoundException = assertThrows( StudentNotFoundException.class, 
+				()-> studentServicedb.update(new Student(5, "Angolano"))
+		);
+		assertEquals( EnumException.ESTUDENT_NOT_FOUND_UPDATE.message + ": " + new Student(5, "Angolano"), 
+				studentNotFoundException.getMessage()
+				);
 
 	}
 
-	@Test
-	void isValidIDTest() {
-
-	}
 
 	@Test
-	void isValidEstudentTest() {
+	@DisplayName("Get a student")
+	void getStudentTest() throws StudentNotFoundException {
 
+		this.studentServicedb = new StudentServicedb();
+		this.student = new Student(1, "Vicente Simão") ;
+		studentServicedb.save( student );
+		studentServicedb.getStudent(student);
 	}
 
 	@Test
