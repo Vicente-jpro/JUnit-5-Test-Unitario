@@ -34,6 +34,7 @@ class StudentServicedbTest {
 	@Test
 	@DisplayName("Save person ")
 	void save() {
+		
 		studentServicedb = new StudentServicedb();
 		assertAll("Save persons and throw exception if exits an unvalide ", () -> {
 
@@ -50,19 +51,17 @@ class StudentServicedbTest {
 	}
 
 	@Test
-	@Order(1)
 	@DisplayName("Delete student")
 	void deleteTest() throws StudentNotFoundException, StudentDeleteException {
 
 		this.studentServicedb = new StudentServicedb();
 
-		studentServicedb.save(new Student(4, "Português"));
-		studentServicedb.delete(new Student(4, "Português"));
+		studentServicedb.save(new Student(4, "Angolano"));
+		studentServicedb.delete(new Student(4, "Angolano"));
 
 	}
 
 	@Test
-	@Order(2)
 	@DisplayName("Delete  ->  Student Not Found Exception")
 	void deleteStudentNotFoundExceptionTest() {
 
@@ -70,9 +69,9 @@ class StudentServicedbTest {
 
 		// Exception when list is empty
 		StudentNotFoundException studentNotFoundException = assertThrows(StudentNotFoundException.class,
-				() -> studentServicedb.delete(new Student(4, "Português")));
+				() -> studentServicedb.delete(new Student(4, "Angolano")));
 
-		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + new Student(4, "Português"),
+		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + new Student(4, "Angolano"),
 				studentNotFoundException.getMessage());
 
 	}
@@ -84,19 +83,32 @@ class StudentServicedbTest {
 
 		this.studentServicedb = new StudentServicedb();
 
-		studentServicedb.save(new Student(4, "Português"));
+		studentServicedb.save(new Student(4, "Angolano"));
 
 		// Exception when is invalid student (id that do not exist in list)
 		StudentDeleteException studentDeleteException = assertThrows(StudentDeleteException.class,
-				() -> studentServicedb.delete(new Student(5, "Português")));
-s
-		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + new Student(5, "Português"),
+				() -> studentServicedb.delete(new Student(5, "Angolano")));
+
+		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + new Student(5, "Angolano"),
 				studentDeleteException.getMessage());
 
 	}
 
 	@Test
-	void updateTest() {
+	@DisplayName("Update a student")
+	void updateTest() throws StudentNotFoundException{
+		
+		this.studentServicedb = new StudentServicedb();
+		studentServicedb.update(new Student(4, "Angolano"));
+
+	}
+
+	@Test
+	@DisplayName("Update a student -> Student Not Found Exception")
+	void updateStudentNotFoundExceptionTest() throws StudentNotFoundException{
+		
+		this.studentServicedb = new StudentServicedb();
+		studentServicedb.update(new Student(4, "Angolano"));
 
 	}
 
