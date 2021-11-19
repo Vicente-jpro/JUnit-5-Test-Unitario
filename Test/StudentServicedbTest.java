@@ -30,10 +30,11 @@ class StudentServicedbTest {
 	private StudentServicedb studentServicedb;
 	private static int ID_ZERO = 0;
 	private static String NULL_NAME = null;
-
+	private Student student = null;
 	@Test
 	@DisplayName("Save person ")
 	void save() {
+		
 		studentServicedb = new StudentServicedb();
 		assertAll("Save persons and throw exception if exits an unvalide ", () -> {
 
@@ -50,29 +51,28 @@ class StudentServicedbTest {
 	}
 
 	@Test
-	@Order(1)
 	@DisplayName("Delete student")
 	void deleteTest() throws StudentNotFoundException, StudentDeleteException {
 
 		this.studentServicedb = new StudentServicedb();
-
-		studentServicedb.save(new Student(4, "Português"));
-		studentServicedb.delete(new Student(4, "Português"));
+		this.student = new Student(4, "Angolano"); 
+		
+		studentServicedb.save(student);
+		studentServicedb.delete(student);
 
 	}
 
 	@Test
-	@Order(2)
 	@DisplayName("Delete  ->  Student Not Found Exception")
 	void deleteStudentNotFoundExceptionTest() {
 
 		this.studentServicedb = new StudentServicedb();
-
+		this.student = new Student(4, "Angolano");
 		// Exception when list is empty
 		StudentNotFoundException studentNotFoundException = assertThrows(StudentNotFoundException.class,
-				() -> studentServicedb.delete(new Student(4, "Português")));
+				() -> studentServicedb.delete( student ));
 
-		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + new Student(4, "Português"),
+		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + student,
 				studentNotFoundException.getMessage());
 
 	}
@@ -84,35 +84,55 @@ class StudentServicedbTest {
 
 		this.studentServicedb = new StudentServicedb();
 
-		studentServicedb.save(new Student(4, "Português"));
+		studentServicedb.save(new Student(4, "Angolano"));
 
 		// Exception when is invalid student (id that do not exist in list)
 		StudentDeleteException studentDeleteException = assertThrows(StudentDeleteException.class,
-				() -> studentServicedb.delete(new Student(5, "Português")));
-s
-		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + new Student(5, "Português"),
+				() -> studentServicedb.delete(new Student(5, "Angolano")));
+
+		assertEquals(EnumException.ESTUDENT_NOT_FOUND_DELETE.message + " : " + new Student(5, "Angolano"),
 				studentDeleteException.getMessage());
 
 	}
 
 	@Test
-	void updateTest() {
+	@DisplayName("Update a student")
+	void updateTest() throws StudentNotFoundException{
+		
+		this.studentServicedb = new StudentServicedb();
+		studentServicedb.save(new Student(4, "Basileiro"));
+		studentServicedb.update(new Student(4, "Angolano"));
 
 	}
 
 	@Test
-	void isValidIDTest() {
+	@DisplayName("Update a student -> Student Not Found Exception")
+	void updateStudentNotFoundExceptionTest() throws StudentNotFoundException{
+		
+		this.studentServicedb = new StudentServicedb();
+		this.student = new Student(4, "Angolano");
+		studentServicedb.save(student);
+		
+		StudentNotFoundException studentNotFoundException = assertThrows( StudentNotFoundException.class, 
+				()-> studentServicedb.update(new Student(5, "Angolano"))
+		);
+		assertEquals( EnumException.ESTUDENT_NOT_FOUND_UPDATE.message + ": " + new Student(5, "Angolano"), 
+				studentNotFoundException.getMessage()
+				);
 
 	}
+
 
 	@Test
-	void isValidEstudentTest() {
+	@DisplayName("Get a student")
+	void getStudentTest() throws StudentNotFoundException {
 
+		this.studentServicedb = new StudentServicedb();
+		this.student = new Student(1, "Vicente Simão") ;
+		studentServicedb.save( student );
+		studentServicedb.getStudent(student);
 	}
 
-	@Test
-	void getStudentIndexInListTest() {
-
-	}
+	
 
 }
